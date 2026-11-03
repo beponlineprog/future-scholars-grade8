@@ -2,15 +2,17 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/fireba
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-// Add your own Firebase Web App configuration here after creating the project.
-// Never put Firebase Admin SDK credentials or service-account private keys in this file.
+// Firebase Web App configuration for Future Scholars Grade 8.
+// These web configuration values identify the project; Firestore Security Rules
+// must protect learner records. Never place Admin SDK credentials in this file.
 const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_FIREBASE_APP_ID"
+  apiKey: "AIzaSyCxW5NG6gjS23UqM_d_KuHKC_No8p_fczo",
+  authDomain: "future-scholars-grade-8.firebaseapp.com",
+  projectId: "future-scholars-grade-8",
+  storageBucket: "future-scholars-grade-8.firebasestorage.app",
+  messagingSenderId: "794312467960",
+  appId: "1:794312467960:web:57701e9b2518b13904e20d",
+  measurementId: "G-FCKZ2LY82C"
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -23,7 +25,7 @@ let db = null;
 let firebaseReady = false;
 
 try {
-  firebaseReady = Object.values(firebaseConfig).every(value => value && !value.startsWith("YOUR_"));
+  firebaseReady = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
   if (firebaseReady) {
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
