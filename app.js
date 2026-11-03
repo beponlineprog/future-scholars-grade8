@@ -1,0 +1,132 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+// Add your own Firebase Web App configuration here after creating the project.
+// Never put Firebase Admin SDK credentials or service-account private keys in this file.
+const firebaseConfig = {
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_FIREBASE_APP_ID"
+};
+
+const $ = (selector) => document.querySelector(selector);
+const dialog = $("#authDialog");
+const registerForm = $("#registerForm");
+const loginForm = $("#loginForm");
+const authMessage = $("#authMessage");
+let auth = null;
+let db = null;
+let firebaseReady = false;
+
+try {
+  firebaseReady = Object.values(firebaseConfig).every(value => value && !value.startsWith("YOUR_"));
+  if (firebaseReady) {
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
+} catch (error) {
+  console.error("Firebase setup:", error);
+}
+
+function showMessage(message, isError = false) {
+  authMessage.textContent = message;
+  authMessage.classList.toggle("error", isError);
+}
+function setMode(mode) {
+  const registering = mode === "register";
+  registerForm.hidden = !registering;
+  loginForm.hidden = registering;
+  $("#registerTab").classList.toggle("active", registering);
+  $("#loginTab").classList.toggle("active", !registering);
+  $("#authTitle").textContent = registering ? "Create your account" : "Welcome back";
+  $("#authIntro").textContent = registering ? "Join Future Scholars Grade 8 and get ready to learn." : "Log in to continue your learning journey.";
+  showMessage("");
+}
+function openAuth(mode) {
+  setMode(mode);
+  if (!dialog.open) dialog.showModal();
+}
+document.querySelectorAll("[data-open-auth]").forEach(button => button.addEventListener("click", () => openAuth(button.dataset.openAuth)));
+document.querySelectorAll("[data-auth-tab]").forEach(button => button.addEventListener("click", () => setMode(button.dataset.authTab)));
+$("#closeAuth").addEventListener("click", () => dialog.close());
+dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+$("#menuToggle").addEventListener("click", () => {
+  const nav = $("#mainNav");
+  const open = nav.classList.toggle("open");
+  $("#menuToggle").setAttribute("aria-expanded", String(open));
+  $("#menuToggle").setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+});
+document.querySelectorAll("#mainNav a").forEach(link => link.addEventListener("click", () => $("#mainNav").classList.remove("open")));
+$("#year").textContent = new Date().getFullYear();
+
+registerForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!firebaseReady) {
+    showMessage("Registration is not connected yet. The administrator must finish the secure Firebase setup before learner accounts can be created.", true);
+    return;
+  }
+  const form = new FormData(registerForm);
+  const fullName = String(form.get("fullName")).trim();
+  const schoolName = String(form.get("schoolName")).trim();
+  const email = String(form.get("email")).trim();
+  const password = String(form.get("password"));
+  const submit = registerForm.querySelector("button[type=submit]");
+  submit.disabled = true;
+  submit.textContent = "Creating account…";
+  try {
+    const credential = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(credential.user, { displayName: fullName });
+    await setDoc(doc(db, "learners", credential.user.uid), {
+      uid: credential.user.uid,
+      fullName,
+      schoolName,
+      email,
+      grade: 8,
+      role: "learner",
+      createdAt: serverTimestamp()
+    });
+    showMessage("Your account has been created. You can now continue to the learner area.");
+    registerForm.reset();
+  } catch (error) {
+    const messages = {
+      "auth/email-already-in-use": "This email address already has an account. Please log in.",
+      "auth/invalid-email": "Please enter a valid email address.",
+      "auth/weak-password": "Please choose a stronger password of at least 8 characters.",
+      "auth/network-request-failed": "Network error. Check your internet connection and try again."
+    };
+    showMessage(messages[error.code] || "We could not create your account. Please try again or contact support.", true);
+  } finally {
+    submit.disabled = false;
+    submit.textContent = "Create learner account";
+  }
+});
+
+loginForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!firebaseReady) {
+    showMessage("Login is not connected yet. The administrator must finish the secure Firebase setup first.", true);
+    return;
+  }
+  const form = new FormData(loginForm);
+  const submit = loginForm.querySelector("button[type=submit]");
+  submit.disabled = true;
+  submit.textContent = "Logging in…";
+  try {
+    await signInWithEmailAndPassword(auth, String(form.get("email")).trim(), String(form.get("password")));
+    showMessage("Login successful. The learner dashboard is the next development stage.");
+  } catch (error) {
+    showMessage(error.code === "auth/invalid-credential" ? "Email or password is incorrect." : "We could not log you in. Please check your details and try again.", true);
+  } finally {
+    submit.disabled = false;
+    submit.textContent = "Log in";
+  }
+});
+
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(error => console.info("Offline support unavailable:", error)));
+}
