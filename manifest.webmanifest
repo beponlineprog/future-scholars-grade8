@@ -1,0 +1,13 @@
+{
+  "name": "Future Scholars Grade 8",
+  "short_name": "Future Scholars",
+  "description": "South African CAPS Grade 8 language learning platform.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#56358a",
+  "icons": [
+    { "src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
