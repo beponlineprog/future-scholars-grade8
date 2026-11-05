@@ -19,7 +19,7 @@
     .dash-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}.dash-card{background:#fff;border:1px solid var(--dash-line);border-radius:18px;padding:22px;box-shadow:0 6px 24px rgba(41,25,68,.035)}.profile-card{grid-column:span 12;display:flex;align-items:center;gap:18px;background:linear-gradient(110deg,#56358a,#7355a4);color:#fff;border:0}.profile-icon{width:62px;height:62px;border-radius:18px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:28px}.profile-card h2{margin:0 0 5px;font-size:21px}.profile-card p{margin:0;color:#e8e0f2;font-size:14px}.profile-meta{margin-left:auto;text-align:right;color:#eee7f6;font-size:12px;line-height:1.8}
     .stat-card{grid-column:span 4;display:flex;align-items:center;gap:14px}.stat-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:#f1ebfa;color:var(--dash-purple);font-size:20px}.stat-card strong{display:block;font-size:22px}.stat-card span{font-size:12px;color:var(--dash-muted)}
     .subjects-card{grid-column:span 8}.side-card{grid-column:span 4}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.section-title h2{font-size:18px;margin:0}.section-title p{font-size:12px;color:var(--dash-muted);margin:5px 0 0}.subject-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.subject-tile{border:1px solid var(--dash-line);border-radius:14px;padding:15px;text-align:left;background:#fff;cursor:pointer;transition:.15s;color:var(--dash-ink)}.subject-tile:hover,.subject-tile.selected{border-color:#9b82c4;background:#faf7ff;transform:translateY(-1px)}.subject-tile .subject-code{display:inline-grid;place-items:center;width:35px;height:35px;border-radius:10px;background:#f1ebfa;color:var(--dash-purple);font-size:12px;font-weight:800;margin-bottom:10px}.subject-tile strong{display:block;font-size:15px}.subject-tile small{display:block;color:var(--dash-muted);font-size:11px;margin-top:4px}
-    .term-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}.term-tab{border:1px solid var(--dash-line);background:#fff;border-radius:9px;padding:8px 13px;font-size:12px;font-weight:700;color:var(--dash-muted);cursor:pointer}.term-tab.active{background:var(--dash-purple);color:#fff;border-color:var(--dash-purple)}.resource-panel{border-radius:13px;background:#faf8fc;padding:18px;display:flex;gap:13px;align-items:flex-start}.resource-panel .resource-icon{font-size:23px}.resource-panel h3{margin:0 0 5px;font-size:14px}.resource-panel p{margin:0;color:var(--dash-muted);font-size:12px;line-height:1.6}
+    .term-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}.term-tab{border:1px solid var(--dash-line);background:#fff;border-radius:9px;padding:8px 13px;font-size:12px;font-weight:700;color:var(--dash-muted);cursor:pointer}.term-tab.active{background:var(--dash-purple);color:#fff;border-color:var(--dash-purple)}.resource-panel{border-radius:13px;background:#faf8fc;padding:18px;display:flex;gap:13px;align-items:flex-start}.resource-panel .resource-icon{font-size:23px}.resource-panel h3{margin:0 0 5px;font-size:14px}.resource-panel p{margin:0;color:var(--dash-muted);font-size:12px;line-height:1.6}.materials-list{display:grid;gap:12px;margin-top:14px}.material-card{border:1px solid var(--dash-line);border-radius:13px;padding:16px;background:#fff}.material-card h3{font-size:15px;margin:0 0 8px;color:var(--dash-purple)}.material-card .material-content{font-size:13px;line-height:1.7;color:var(--dash-ink);white-space:pre-wrap;overflow-wrap:anywhere}.material-meta{font-size:11px;color:var(--dash-muted);margin-top:10px}
     .progress-track{height:9px;border-radius:10px;background:#eeeaf4;overflow:hidden;margin:13px 0 8px}.progress-track span{display:block;height:100%;width:0;background:var(--dash-gold);border-radius:10px}.muted-note{font-size:12px;color:var(--dash-muted);line-height:1.6}.result-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--dash-line);font-size:13px}.result-row:last-child{border:0}.result-row span{color:var(--dash-muted)}
     .dash-footer{text-align:center;color:var(--dash-muted);font-size:12px;padding:20px}.loading-state{padding:30px;text-align:center;color:var(--dash-muted)}.error-state{background:#fff4f2;color:#8a3025;border-radius:12px;padding:16px;font-size:13px}
     @media(max-width:800px){.subjects-card,.side-card{grid-column:span 12}.stat-card{grid-column:span 4}.dash-date{display:none}}
@@ -52,12 +52,12 @@
             <button class="subject-tile selected" data-subject="English FAL"><span class="subject-code">EN</span><strong>English</strong><small>First Additional Language</small></button>
             <button class="subject-tile" data-subject="isiZulu HL"><span class="subject-code">ZU</span><strong>isiZulu</strong><small>Home Language</small></button>
             <button class="subject-tile" data-subject="Sepedi HL"><span class="subject-code">SE</span><strong>Sepedi</strong><small>Home Language</small></button>
-            <button class="subject-tile" data-subject="itsonga HL"><span class="subject-code">XI</span><strong>itsonga</strong><small>Home Language</small></button>
+            <button class="subject-tile" data-subject="itsonga HL"><span class="subject-code">XI</span><strong>Xiitsonga</strong><small>Home Language</small></button>
           </div>
           <div class="term-tabs" id="termTabs" aria-label="Choose school term">
             <button class="term-tab active" data-term="1">Term 1</button><button class="term-tab" data-term="2">Term 2</button><button class="term-tab" data-term="3">Term 3</button><button class="term-tab" data-term="4">Term 4</button>
           </div>
-          <div class="resource-panel"><div class="resource-icon">📖</div><div><h3 id="resourceHeading">English FAL · Term 1</h3><p id="resourceMessage">Learning materials and lessons will appear here when they are published by your administrator.</p></div></div>
+          <div class="resource-panel"><div class="resource-icon">📖</div><div><h3 id="resourceHeading">English FAL · Term 1</h3><p id="resourceMessage">Loading published lessons…</p></div></div><div class="materials-list" id="materialsList" aria-live="polite"></div>
         </article>
         <aside class="dash-card side-card">
           <div class="section-title"><div><h2>My progress</h2><p>Your learning activity</p></div></div>
@@ -76,7 +76,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyCxW5NG6gjS23UqM_d_KuHKC_No8p_fczo",
       authDomain: "future-scholars-grade-8.firebaseapp.com",
@@ -88,19 +88,56 @@
     };
     const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
     const $ = id => document.getElementById(id);
-    let chosenSubject = "English FAL", chosenTerm = 1;
+    let chosenSubject = "English FAL", chosenTerm = 1, publishedMaterials = [];
     $("todayDate").textContent = new Intl.DateTimeFormat("en-ZA",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
     document.querySelectorAll("[data-subject]").forEach(btn => btn.addEventListener("click", () => {
       chosenSubject = btn.dataset.subject;
       document.querySelectorAll("[data-subject]").forEach(item => item.classList.toggle("selected",item===btn));
       updateResourceHeading();
+      renderMaterials();
     }));
     document.querySelectorAll("[data-term]").forEach(btn => btn.addEventListener("click", () => {
       chosenTerm = Number(btn.dataset.term);
       document.querySelectorAll("[data-term]").forEach(item => item.classList.toggle("active",item===btn));
       updateResourceHeading();
+      renderMaterials();
     }));
     function updateResourceHeading(){ $("resourceHeading").textContent = chosenSubject + " · Term " + chosenTerm; }
+    function renderMaterials(){
+      const list = $("materialsList");
+      list.replaceChildren();
+      const matches = publishedMaterials.filter(item =>
+        item.subject === chosenSubject && Number(item.term) === chosenTerm && item.published === true
+      );
+      if (!matches.length) {
+        $("resourceMessage").textContent = publishedMaterials.length
+          ? "No published lessons are available for this subject and term yet."
+          : "No published learning materials were found. Please contact your administrator.";
+        return;
+      }
+      $("resourceMessage").textContent = matches.length + (matches.length === 1 ? " published lesson is available." : " published lessons are available.");
+      matches.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "material-card";
+        const heading = document.createElement("h3");
+        heading.textContent = item.title || "Untitled lesson";
+        const content = document.createElement("div");
+        content.className = "material-content";
+        content.textContent = item.content || "No lesson notes have been added yet.";
+        const meta = document.createElement("div");
+        meta.className = "material-meta";
+        meta.textContent = chosenSubject + " · Term " + chosenTerm;
+        card.append(heading, content, meta);
+        list.append(card);
+      });
+    }
+    async function loadPublishedMaterials(){
+      $("resourceMessage").textContent = "Loading published lessons…";
+      const materialsQuery = query(collection(db, "materials"), where("published", "==", true));
+      const snapshot = await getDocs(materialsQuery);
+      publishedMaterials = snapshot.docs.map(item => item.data());
+      renderMaterials();
+    }
     $("logoutBtn").addEventListener("click", async () => { $("logoutBtn").disabled=true; try { await signOut(auth); location.href="./"; } catch(e) { $("logoutBtn").disabled=false; alert("Could not log out. Please try again."); } });
     onAuthStateChanged(auth, async user => {
       if (!user) { location.replace("./"); return; }
@@ -116,6 +153,7 @@
         $("avatar").textContent = fullName.split(/\s+/).slice(0,2).map(part=>part[0]).join("").toUpperCase();
         $("statusMessage").hidden = true;
         $("dashboardContent").hidden = false;
+        await loadPublishedMaterials();
       } catch(error) {
         console.error("Learner profile:",error);
         $("statusMessage").className = "error-state";
