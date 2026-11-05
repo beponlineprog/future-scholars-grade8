@@ -24,6 +24,7 @@
         <article class="admin-stat"><span>Learning materials</span><strong id="materialCount">—</strong></article>
         <article class="admin-stat"><span>Published materials</span><strong id="publishedCount">—</strong></article>
       </section>
+      <section class="admin-panel" id="term1ImportPanel"><h2>Term 1 ready-made lessons</h2><p class="panel-intro">Import the prepared starter lessons for English FAL, isiZulu HL, Sepedi HL and Xitsonga HL into your materials library. Existing lessons with the same subject, term and title will be skipped.</p><button class="button button-purple" id="importTerm1Btn" type="button">Import Term 1 lessons</button> <span id="importMessage" class="notice" aria-live="polite"></span></section>
       <section class="admin-panel">
         <h2>Add learning material</h2><p class="panel-intro">Create a lesson or study note for a subject and school term. Published items will be visible to learners.</p>
         <form id="materialForm" class="admin-form">
@@ -43,6 +44,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import { term1Lessons } from "./curriculum-term1.js";
     const firebaseConfig = {
       apiKey: "AIzaSyCxW5NG6gjS23UqM_d_KuHKC_No8p_fczo",
       authDomain: "future-scholars-grade-8.firebaseapp.com",
@@ -77,6 +79,24 @@
         $("status").hidden=true;$("adminContent").hidden=false;
         await loadAdminData();
       }catch(error){console.error(error);setStatus("We could not verify administrator access or load records. Check that the latest Firestore rules are published.",true);}
+    });
+    $("importTerm1Btn").addEventListener("click",async()=>{
+      const button=$("importTerm1Btn"),message=$("importMessage");
+      button.disabled=true;button.textContent="Importing lessons…";message.textContent="";message.className="notice";
+      try{
+        const existing=await getDocs(collection(db,"materials"));
+        const known=new Set(existing.docs.map(d=>{const m=d.data();return [m.subject,m.term,m.title].join("|");}));
+        let added=0,skipped=0;
+        for(const lesson of term1Lessons){
+          const key=[lesson.subject,lesson.term,lesson.title].join("|");
+          if(known.has(key)){skipped++;continue;}
+          await addDoc(collection(db,"materials"),{...lesson,createdBy:adminUid,createdAt:serverTimestamp(),published:true});
+          known.add(key);added++;
+        }
+        message.textContent=added+" lessons imported; "+skipped+" existing lessons skipped.";
+        await loadAdminData();
+      }catch(error){console.error(error);message.textContent="Import failed. Please check your internet connection and Firestore rules.";message.className="notice error";}
+      finally{button.disabled=false;button.textContent="Import Term 1 lessons";}
     });
     $("materialForm").addEventListener("submit",async event=>{
       event.preventDefault();
