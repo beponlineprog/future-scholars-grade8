@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // Firebase Web App configuration for Future Scholars Grade 8.
 // These web configuration values identify the project; Firestore Security Rules
@@ -149,9 +149,21 @@ loginForm.addEventListener("submit", async event => {
   submit.disabled = true;
   submit.textContent = "Logging in…";
   try {
-    await signInWithEmailAndPassword(auth, String(form.get("email")).trim(), String(form.get("password")));
-    showMessage("Login successful. Opening your learner dashboard…");
-    window.location.href = "./learner.html";
+    const credential = await signInWithEmailAndPassword(auth, String(form.get("email")).trim(), String(form.get("password")));
+    const profileSnapshot = await getDoc(doc(db, "learners", credential.user.uid));
+    if (!profileSnapshot.exists()) {
+      showMessage("Your account profile could not be found. Please contact the administrator.", true);
+      await auth.signOut();
+      return;
+    }
+    const profile = profileSnapshot.data();
+    if (profile.role === "admin") {
+      showMessage("Administrator login successful. Opening the admin dashboard…");
+      window.location.href = "./admin.html";
+    } else {
+      showMessage("Login successful. Opening your learner dashboard…");
+      window.location.href = "./learner.html";
+    }
   } catch (error) {
     showMessage(error.code === "auth/invalid-credential" ? "Email or password is incorrect." : "We could not log you in. Please check your details and try again.", true);
   } finally {
