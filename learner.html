@@ -153,7 +153,11 @@
         $("avatar").textContent = fullName.split(/\s+/).slice(0,2).map(part=>part[0]).join("").toUpperCase();
         $("statusMessage").hidden = true;
         $("dashboardContent").hidden = false;
-        await loadPublishedMaterials();
+        try { await loadPublishedMaterials(); }
+        catch (materialsError) {
+          console.error("Published materials:", materialsError);
+          $("resourceMessage").textContent = "We could not load lessons. Please refresh the page or contact your administrator.";
+        }
       } catch(error) {
         console.error("Learner profile:",error);
         $("statusMessage").className = "error-state";
