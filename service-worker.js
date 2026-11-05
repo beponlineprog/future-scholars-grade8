@@ -1,4 +1,4 @@
-const CACHE_NAME = "future-scholars-shell-v2";
+const CACHE_NAME = "future-scholars-shell-v3";
 const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./assets/icon.svg"];
 
 self.addEventListener("install", event => {
@@ -22,10 +22,12 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
 
-  const pathname = new URL(event.request.url).pathname;
-  const isAppCode = pathname.endsWith("/app.js") || pathname.endsWith("/index.html") || pathname.endsWith("/");
+  const url = new URL(event.request.url);
+  const isHtml = event.request.mode === "navigate" || url.pathname.endsWith(".html");
+  const isAppCode = url.pathname.endsWith("/app.js") || url.pathname.endsWith("/index.html") || url.pathname.endsWith("/");
 
-  if (isAppCode) {
+  // Always check the network first for pages so dashboard updates are not hidden by an old cache.
+  if (isHtml || isAppCode) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
