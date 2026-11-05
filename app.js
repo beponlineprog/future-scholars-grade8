@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // Firebase Web App configuration for Future Scholars Grade 8.
@@ -20,6 +20,41 @@ const dialog = $("#authDialog");
 const registerForm = $("#registerForm");
 const loginForm = $("#loginForm");
 const authMessage = $("#authMessage");
+const forgotPasswordButton = document.createElement("button");
+forgotPasswordButton.type = "button";
+forgotPasswordButton.className = "text-link";
+forgotPasswordButton.textContent = "Forgot password?";
+forgotPasswordButton.style.cssText = "display:block;margin:12px 0 0 auto;background:none;border:0;cursor:pointer;font:inherit;text-decoration:underline;";
+$("#loginPassword").insertAdjacentElement("afterend", forgotPasswordButton);
+forgotPasswordButton.addEventListener("click", async () => {
+  const email = $("#loginEmail").value.trim();
+  if (!email) {
+    showMessage("Enter your email address above, then click Forgot password?", true);
+    $("#loginEmail").focus();
+    return;
+  }
+  if (!firebaseReady || !auth) {
+    showMessage("Password reset is not available right now. Please contact your administrator.", true);
+    return;
+  }
+  forgotPasswordButton.disabled = true;
+  forgotPasswordButton.textContent = "Sending reset email…";
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMessage("If an account exists for this email, a password reset link has been sent. Check your inbox and spam folder.");
+  } catch (error) {
+    const messages = {
+      "auth/invalid-email": "Please enter a valid email address.",
+      "auth/user-not-found": "No account was found for that email address.",
+      "auth/too-many-requests": "Too many attempts. Please wait and try again later.",
+      "auth/network-request-failed": "Network error. Check your internet connection and try again."
+    };
+    showMessage(messages[error.code] || "We could not send the reset email. Please try again later.", true);
+  } finally {
+    forgotPasswordButton.disabled = false;
+    forgotPasswordButton.textContent = "Forgot password?";
+  }
+});
 let auth = null;
 let db = null;
 let firebaseReady = false;
