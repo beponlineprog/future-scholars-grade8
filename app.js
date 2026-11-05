@@ -20,12 +20,7 @@ const dialog = $("#authDialog");
 const registerForm = $("#registerForm");
 const loginForm = $("#loginForm");
 const authMessage = $("#authMessage");
-const forgotPasswordButton = document.createElement("button");
-forgotPasswordButton.type = "button";
-forgotPasswordButton.className = "text-link";
-forgotPasswordButton.textContent = "Forgot password?";
-forgotPasswordButton.style.cssText = "display:block;margin:12px 0 0 auto;background:none;border:0;cursor:pointer;font:inherit;text-decoration:underline;";
-$("#loginPassword").insertAdjacentElement("afterend", forgotPasswordButton);
+const forgotPasswordButton = $("#forgotPasswordButton");
 forgotPasswordButton.addEventListener("click", async () => {
   const email = $("#loginEmail").value.trim();
   if (!email) {
