@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#56358a">
+  <meta name="description" content="Future Scholars Grade 8 learner dashboard">
+  <title>Learner Dashboard | Future Scholars Grade 8</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    :root{--dash-purple:#56358a;--dash-gold:#e6bd59;--dash-ink:#211a31;--dash-muted:#777184;--dash-line:#ece8f2;--dash-bg:#f8f6fb}
+    body.dashboard-page{background:var(--dash-bg);color:var(--dash-ink);min-height:100vh}
+    .dash-header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--dash-line);padding:14px clamp(18px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .dash-brand{display:flex;align-items:center;gap:11px;color:var(--dash-ink);text-decoration:none}.dash-brand .brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--dash-purple);color:var(--dash-gold);font-size:22px}.dash-brand strong{display:block;font-size:13px;letter-spacing:.08em}.dash-brand small{display:block;font-size:10px;color:var(--dash-muted);letter-spacing:.1em;margin-top:3px}
+    .dash-actions{display:flex;align-items:center;gap:12px}.dash-avatar{width:38px;height:38px;border-radius:50%;background:#eee7f8;color:var(--dash-purple);display:grid;place-items:center;font-weight:800}
+    .dash-wrap{width:min(1160px,92%);margin:32px auto 60px}.dash-welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:26px}.dash-welcome .eyebrow{color:var(--dash-purple);font-weight:800;letter-spacing:.12em;font-size:11px}.dash-welcome h1{font-size:clamp(26px,4vw,38px);line-height:1.15;margin:8px 0}.dash-welcome p{color:var(--dash-muted);margin:0}.dash-date{color:var(--dash-muted);font-size:13px;white-space:nowrap}
+    .dash-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}.dash-card{background:#fff;border:1px solid var(--dash-line);border-radius:18px;padding:22px;box-shadow:0 6px 24px rgba(41,25,68,.035)}.profile-card{grid-column:span 12;display:flex;align-items:center;gap:18px;background:linear-gradient(110deg,#56358a,#7355a4);color:#fff;border:0}.profile-icon{width:62px;height:62px;border-radius:18px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:28px}.profile-card h2{margin:0 0 5px;font-size:21px}.profile-card p{margin:0;color:#e8e0f2;font-size:14px}.profile-meta{margin-left:auto;text-align:right;color:#eee7f6;font-size:12px;line-height:1.8}
+    .stat-card{grid-column:span 4;display:flex;align-items:center;gap:14px}.stat-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:#f1ebfa;color:var(--dash-purple);font-size:20px}.stat-card strong{display:block;font-size:22px}.stat-card span{font-size:12px;color:var(--dash-muted)}
+    .subjects-card{grid-column:span 8}.side-card{grid-column:span 4}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.section-title h2{font-size:18px;margin:0}.section-title p{font-size:12px;color:var(--dash-muted);margin:5px 0 0}.subject-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.subject-tile{border:1px solid var(--dash-line);border-radius:14px;padding:15px;text-align:left;background:#fff;cursor:pointer;transition:.15s;color:var(--dash-ink)}.subject-tile:hover,.subject-tile.selected{border-color:#9b82c4;background:#faf7ff;transform:translateY(-1px)}.subject-tile .subject-code{display:inline-grid;place-items:center;width:35px;height:35px;border-radius:10px;background:#f1ebfa;color:var(--dash-purple);font-size:12px;font-weight:800;margin-bottom:10px}.subject-tile strong{display:block;font-size:15px}.subject-tile small{display:block;color:var(--dash-muted);font-size:11px;margin-top:4px}
+    .term-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}.term-tab{border:1px solid var(--dash-line);background:#fff;border-radius:9px;padding:8px 13px;font-size:12px;font-weight:700;color:var(--dash-muted);cursor:pointer}.term-tab.active{background:var(--dash-purple);color:#fff;border-color:var(--dash-purple)}.resource-panel{border-radius:13px;background:#faf8fc;padding:18px;display:flex;gap:13px;align-items:flex-start}.resource-panel .resource-icon{font-size:23px}.resource-panel h3{margin:0 0 5px;font-size:14px}.resource-panel p{margin:0;color:var(--dash-muted);font-size:12px;line-height:1.6}
+    .progress-track{height:9px;border-radius:10px;background:#eeeaf4;overflow:hidden;margin:13px 0 8px}.progress-track span{display:block;height:100%;width:0;background:var(--dash-gold);border-radius:10px}.muted-note{font-size:12px;color:var(--dash-muted);line-height:1.6}.result-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--dash-line);font-size:13px}.result-row:last-child{border:0}.result-row span{color:var(--dash-muted)}
+    .dash-footer{text-align:center;color:var(--dash-muted);font-size:12px;padding:20px}.loading-state{padding:30px;text-align:center;color:var(--dash-muted)}.error-state{background:#fff4f2;color:#8a3025;border-radius:12px;padding:16px;font-size:13px}
+    @media(max-width:800px){.subjects-card,.side-card{grid-column:span 12}.stat-card{grid-column:span 4}.dash-date{display:none}}
+    @media(max-width:560px){.dash-wrap{margin-top:22px}.dash-welcome{align-items:flex-start}.dash-grid{gap:12px}.dash-card{padding:17px}.profile-card{align-items:flex-start;flex-wrap:wrap}.profile-meta{margin-left:0;text-align:left;width:100%}.stat-card{grid-column:span 12;padding:14px}.subject-list{grid-template-columns:1fr}.dash-actions .button{padding:9px 12px;font-size:12px}}
+  </style>
+</head>
+<body class="dashboard-page">
+  <header class="dash-header">
+    <a class="dash-brand" href="./" aria-label="Future Scholars home"><span class="brand-mark">✦</span><span><strong>FUTURE SCHOLARS</strong><small>GRADE 8 · LEARNER PORTAL</small></span></a>
+    <div class="dash-actions"><div class="dash-avatar" id="avatar">FS</div><button class="button button-outline button-small" id="logoutBtn">Log out</button></div>
+  </header>
+  <main class="dash-wrap">
+    <section class="dash-welcome">
+      <div><p class="eyebrow">YOUR LEARNING SPACE</p><h1>Welcome, <span id="welcomeName">Future Scholar</span>!</h1><p>Keep learning, keep growing. Your next achievement starts here.</p></div>
+      <div class="dash-date" id="todayDate"></div>
+    </section>
+    <div id="statusMessage" class="loading-state">Loading your learner profile…</div>
+    <div id="dashboardContent" hidden>
+      <section class="dash-grid">
+        <article class="dash-card profile-card">
+          <div class="profile-icon">🎓</div><div><h2 id="profileName">Learner</h2><p id="profileSchool">Grade 8 learner</p></div>
+          <div class="profile-meta"><div>GRADE <strong id="profileGrade">8</strong></div><div>LEARNER ACCOUNT</div></div>
+        </article>
+        <article class="dash-card stat-card"><div class="stat-icon">📚</div><div><strong>4</strong><span>Language subjects</span></div></article>
+        <article class="dash-card stat-card"><div class="stat-icon">🗓️</div><div><strong>4</strong><span>School terms</span></div></article>
+        <article class="dash-card stat-card"><div class="stat-icon">🏅</div><div><strong id="assessmentCount">—</strong><span>Assessments completed</span></div></article>
+        <article class="dash-card subjects-card">
+          <div class="section-title"><div><h2>My subjects</h2><p>Choose a language to view its learning area.</p></div></div>
+          <div class="subject-list" id="subjectList">
+            <button class="subject-tile selected" data-subject="English FAL"><span class="subject-code">EN</span><strong>English</strong><small>First Additional Language</small></button>
+            <button class="subject-tile" data-subject="isiZulu HL"><span class="subject-code">ZU</span><strong>isiZulu</strong><small>Home Language</small></button>
+            <button class="subject-tile" data-subject="Sepedi HL"><span class="subject-code">SE</span><strong>Sepedi</strong><small>Home Language</small></button>
+            <button class="subject-tile" data-subject="itsonga HL"><span class="subject-code">XI</span><strong>itsonga</strong><small>Home Language</small></button>
+          </div>
+          <div class="term-tabs" id="termTabs" aria-label="Choose school term">
+            <button class="term-tab active" data-term="1">Term 1</button><button class="term-tab" data-term="2">Term 2</button><button class="term-tab" data-term="3">Term 3</button><button class="term-tab" data-term="4">Term 4</button>
+          </div>
+          <div class="resource-panel"><div class="resource-icon">📖</div><div><h3 id="resourceHeading">English FAL · Term 1</h3><p id="resourceMessage">Learning materials and lessons will appear here when they are published by your administrator.</p></div></div>
+        </article>
+        <aside class="dash-card side-card">
+          <div class="section-title"><div><h2>My progress</h2><p>Your learning activity</p></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><strong>Learning progress</strong><span id="progressLabel">Not started</span></div>
+          <div class="progress-track"><span id="progressBar"></span></div>
+          <p class="muted-note">Your progress will update as you complete lessons and activities.</p>
+          <div class="section-title" style="margin-top:24px"><div><h2>Recent results</h2><p>Assessment summary</p></div></div>
+          <div class="result-row"><strong>Completed assessments</strong><span id="resultAssessments">—</span></div>
+          <div class="result-row"><strong>Latest mark</strong><span id="latestMark">—</span></div>
+          <p class="muted-note" style="margin-top:12px">Quiz results will be shown here once assessments are connected.</p>
+        </aside>
+      </section>
+    </div>
+  </main>
+  <footer class="dash-footer">Future Scholars Grade 8 · Learn Today. Lead Tomorrow.</footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxW5NG6gjS23UqM_d_KuHKC_No8p_fczo",
+      authDomain: "future-scholars-grade-8.firebaseapp.com",
+      projectId: "future-scholars-grade-8",
+      storageBucket: "future-scholars-grade-8.firebasestorage.app",
+      messagingSenderId: "794312467960",
+      appId: "1:794312467960:web:57701e9b2518b13904e20d",
+      measurementId: "G-FCKZ2LY82C"
+    };
+    const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
+    const $ = id => document.getElementById(id);
+    let chosenSubject = "English FAL", chosenTerm = 1;
+    $("todayDate").textContent = new Intl.DateTimeFormat("en-ZA",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
+    document.querySelectorAll("[data-subject]").forEach(btn => btn.addEventListener("click", () => {
+      chosenSubject = btn.dataset.subject;
+      document.querySelectorAll("[data-subject]").forEach(item => item.classList.toggle("selected",item===btn));
+      updateResourceHeading();
+    }));
+    document.querySelectorAll("[data-term]").forEach(btn => btn.addEventListener("click", () => {
+      chosenTerm = Number(btn.dataset.term);
+      document.querySelectorAll("[data-term]").forEach(item => item.classList.toggle("active",item===btn));
+      updateResourceHeading();
+    }));
+    function updateResourceHeading(){ $("resourceHeading").textContent = chosenSubject + " · Term " + chosenTerm; }
+    $("logoutBtn").addEventListener("click", async () => { $("logoutBtn").disabled=true; try { await signOut(auth); location.href="./"; } catch(e) { $("logoutBtn").disabled=false; alert("Could not log out. Please try again."); } });
+    onAuthStateChanged(auth, async user => {
+      if (!user) { location.replace("./"); return; }
+      try {
+        const snap = await getDoc(doc(db,"learners",user.uid));
+        const learner = snap.exists() ? snap.data() : {};
+        const fullName = learner.fullName || user.displayName || "Future Scholar";
+        const firstName = fullName.trim().split(/\s+/)[0] || "Future Scholar";
+        $("welcomeName").textContent = firstName;
+        $("profileName").textContent = fullName;
+        $("profileSchool").textContent = (learner.schoolName || "School not listed") + " · Grade 8";
+        $("profileGrade").textContent = learner.grade || 8;
+        $("avatar").textContent = fullName.split(/\s+/).slice(0,2).map(part=>part[0]).join("").toUpperCase();
+        $("statusMessage").hidden = true;
+        $("dashboardContent").hidden = false;
+      } catch(error) {
+        console.error("Learner profile:",error);
+        $("statusMessage").className = "error-state";
+        $("statusMessage").textContent = "We could not load your learner profile. Please check your connection or contact your administrator.";
+      }
+    });
+  </script>
+</body>
+</html>
