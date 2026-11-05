@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#56358a">
+  <title>Administrator Dashboard | Future Scholars Grade 8</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    body{background:#f8f6fb;min-height:100vh}.admin-header{background:#fff;border-bottom:1px solid #ece8f2;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-brand{display:flex;align-items:center;gap:11px;color:#282238}.admin-brand .brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#56358a;color:#e6bd59;font-size:22px}.admin-brand strong,.admin-brand small{display:block}.admin-brand strong{font-size:13px;letter-spacing:.08em}.admin-brand small{font-size:10px;color:#777184}.admin-wrap{width:min(1120px,92%);margin:32px auto 60px}.admin-welcome{margin-bottom:25px}.admin-welcome .eyebrow{color:#56358a;font-weight:800;letter-spacing:.12em;font-size:11px}.admin-welcome h1{font-size:clamp(27px,4vw,38px);margin:5px 0;color:#38205f}.admin-welcome p{margin:0;color:#777184;font-size:13px}.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:22px}.admin-stat,.admin-panel{background:#fff;border:1px solid #ece8f2;border-radius:16px;padding:20px;box-shadow:0 6px 24px #29194409}.admin-stat span{font-size:12px;color:#777184}.admin-stat strong{display:block;font-size:27px;color:#56358a;margin-top:5px}.admin-panel{margin-bottom:20px}.admin-panel h2{font-size:21px;margin:0 0 5px}.panel-intro{font-size:12px;color:#777184;margin:0 0 18px}.admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:700;color:#51475f}.field input,.field select,.field textarea{width:100%;border:1px solid #ddd5e7;border-radius:8px;padding:11px;font:inherit;font-size:13px;background:#fff;color:#282238}.field textarea{min-height:125px;resize:vertical}.form-actions{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.notice{font-size:12px;color:#56358a;min-height:18px}.notice.error{color:#b42318}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;min-width:520px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #ece8f2}th{color:#777184;font-size:10px;text-transform:uppercase;letter-spacing:.08em}td{color:#352d43}.pill{display:inline-block;border-radius:30px;background:#f1ebfa;color:#56358a;padding:4px 9px;font-size:10px;font-weight:700}.empty{font-size:12px;color:#777184;padding:12px 0}.logout{padding:9px 14px;font-size:12px}@media(max-width:650px){.admin-grid{grid-template-columns:1fr}.admin-form{grid-template-columns:1fr}.field.full,.form-actions{grid-column:auto}.admin-wrap{margin-top:23px}.admin-header{padding:12px 4%}}
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <a class="admin-brand" href="./"><span class="brand-mark">✦</span><span><strong>FUTURE SCHOLARS</strong><small>GRADE 8 · ADMINISTRATION</small></span></a>
+    <button class="button button-outline logout" id="logoutBtn">Log out</button>
+  </header>
+  <main class="admin-wrap">
+    <section class="admin-welcome"><p class="eyebrow">ADMINISTRATION PORTAL</p><h1>Administrator dashboard</h1><p>Manage learner records and publish Grade 8 learning materials.</p></section>
+    <div id="status" class="admin-panel">Checking administrator access…</div>
+    <div id="adminContent" hidden>
+      <section class="admin-grid">
+        <article class="admin-stat"><span>Registered learners</span><strong id="learnerCount">—</strong></article>
+        <article class="admin-stat"><span>Learning materials</span><strong id="materialCount">—</strong></article>
+        <article class="admin-stat"><span>Published materials</span><strong id="publishedCount">—</strong></article>
+      </section>
+      <section class="admin-panel">
+        <h2>Add learning material</h2><p class="panel-intro">Create a lesson or study note for a subject and school term. Published items will be visible to learners.</p>
+        <form id="materialForm" class="admin-form">
+          <div class="field"><label for="subject">Subject</label><select id="subject" required><option>English FAL</option><option>isiZulu HL</option><option>Sepedi HL</option><option>itsonga HL</option></select></div>
+          <div class="field"><label for="term">Term</label><select id="term" required><option value="1">Term 1</option><option value="2">Term 2</option><option value="3">Term 3</option><option value="4">Term 4</option></select></div>
+          <div class="field full"><label for="title">Lesson title</label><input id="title" maxlength="120" required placeholder="e.g. Reading comprehension"></div>
+          <div class="field full"><label for="content">Lesson content / study notes</label><textarea id="content" required placeholder="Write the lesson, instructions or study notes here…"></textarea></div>
+          <div class="field"><label for="published">Visibility</label><select id="published"><option value="true">Publish for learners</option><option value="false">Save as draft</option></select></div>
+          <div class="form-actions"><button class="button button-purple" id="saveMaterial" type="submit">Save learning material</button><span id="formMessage" class="notice" aria-live="polite"></span></div>
+        </form>
+      </section>
+      <section class="admin-panel"><h2>Registered learners</h2><p class="panel-intro">Learner accounts stored in your secure Firestore database.</p><div class="table-wrap"><table><thead><tr><th>Name</th><th>School</th><th>Email</th><th>Grade</th></tr></thead><tbody id="learnerRows"><tr><td colspan="4">Loading learners…</td></tr></tbody></table></div></section>
+      <section class="admin-panel"><h2>Learning materials</h2><p class="panel-intro">Materials currently stored in Firestore.</p><div class="table-wrap"><table><thead><tr><th>Title</th><th>Subject</th><th>Term</th><th>Status</th></tr></thead><tbody id="materialRows"><tr><td colspan="4">Loading materials…</td></tr></tbody></table></div></section>
+    </div>
+  </main>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxW5NG6gjS23UqM_d_KuHKC_No8p_fczo",
+      authDomain: "future-scholars-grade-8.firebaseapp.com",
+      projectId: "future-scholars-grade-8",
+      storageBucket: "future-scholars-grade-8.firebasestorage.app",
+      messagingSenderId: "794312467960",
+      appId: "1:794312467960:web:57701e9b2518b13904e20d",
+      measurementId: "G-FCKZ2LY82C"
+    };
+    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+    const $=id=>document.getElementById(id);
+    let adminUid=null;
+    function setStatus(message,error=false){$("status").textContent=message;$("status").style.color=error?"#b42318":"#56358a";}
+    $("logoutBtn").addEventListener("click",async()=>{await signOut(auth);location.replace("./");});
+    async function loadAdminData(){
+      const [learnersSnap,materialsSnap]=await Promise.all([getDocs(collection(db,"learners")),getDocs(collection(db,"materials"))]);
+      const learners=learnersSnap.docs.map(d=>d.data());
+      const materials=materialsSnap.docs.map(d=>d.data());
+      $("learnerCount").textContent=learners.length;
+      $("materialCount").textContent=materials.length;
+      $("publishedCount").textContent=materials.filter(m=>m.published===true).length;
+      $("learnerRows").innerHTML=learners.length?learners.map(l=>"<tr><td>"+escapeHtml(l.fullName||"—")+"</td><td>"+escapeHtml(l.schoolName||"—")+"</td><td>"+escapeHtml(l.email||"—")+"</td><td>"+escapeHtml(String(l.grade||8))+"</td></tr>").join(""):'<tr><td colspan="4" class="empty">No learner accounts found.</td></tr>';
+      $("materialRows").innerHTML=materials.length?materials.map(m=>"<tr><td>"+escapeHtml(m.title||"—")+"</td><td>"+escapeHtml(m.subject||"—")+"</td><td>"+escapeHtml(String(m.term||"—"))+"</td><td><span class=\"pill\">"+(m.published===true?"Published":"Draft")+"</span></td></tr>").join(""):'<tr><td colspan="4" class="empty">No learning materials have been added yet.</td></tr>';
+    }
+    function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+    onAuthStateChanged(auth,async user=>{
+      if(!user){location.replace("./");return;}
+      try{
+        const profile=await getDoc(doc(db,"learners",user.uid));
+        if(!profile.exists()||profile.data().role!=="admin"){setStatus("Access denied. This account is not an administrator.",true);await signOut(auth);setTimeout(()=>location.replace("./"),1800);return;}
+        adminUid=user.uid;
+        $("status").hidden=true;$("adminContent").hidden=false;
+        await loadAdminData();
+      }catch(error){console.error(error);setStatus("We could not verify administrator access or load records. Check that the latest Firestore rules are published.",true);}
+    });
+    $("materialForm").addEventListener("submit",async event=>{
+      event.preventDefault();
+      if(!adminUid)return;
+      const button=$("saveMaterial"),message=$("formMessage");
+      button.disabled=true;button.textContent="Saving…";message.textContent="";message.className="notice";
+      try{
+        await addDoc(collection(db,"materials"),{
+          subject:$("subject").value,
+          term:Number($("term").value),
+          title:$("title").value.trim(),
+          content:$("content").value.trim(),
+          published:$("published").value==="true",
+          createdBy:adminUid,
+          createdAt:serverTimestamp()
+        });
+        $("materialForm").reset();
+        message.textContent="Learning material saved successfully.";
+        await loadAdminData();
+      }catch(error){console.error(error);message.textContent="Could not save. Confirm the Firestore rules are published and try again.";message.className="notice error";}
+      finally{button.disabled=false;button.textContent="Save learning material";}
+    });
+  </script>
+</body>
+</html>
