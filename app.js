@@ -120,7 +120,8 @@ loginForm.addEventListener("submit", async event => {
   submit.textContent = "Logging in…";
   try {
     await signInWithEmailAndPassword(auth, String(form.get("email")).trim(), String(form.get("password")));
-    showMessage("Login successful. The learner dashboard is the next development stage.");
+    showMessage("Login successful. Opening your learner dashboard…");
+    window.location.href = "./learner.html";
   } catch (error) {
     showMessage(error.code === "auth/invalid-credential" ? "Email or password is incorrect." : "We could not log you in. Please check your details and try again.", true);
   } finally {
